@@ -1,0 +1,218 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model patient {
+  patient_id        Int             @id
+  date_of_birth     DateTime        @db.Date
+  gender            String?         @db.VarChar(10)
+  emergency_contact String?         @db.VarChar(100)
+  appointments      appointments[]
+  profile           profile         @relation(fields: [patient_id], references: [profile_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_patient_profile")
+  prescriptions     prescriptions[]
+}
+
+model profile {
+  profile_id   Int           @id @default(autoincrement())
+  first_name   String        @db.VarChar(50)
+  last_name    String        @db.VarChar(50)
+  phone        String?       @db.VarChar(20)
+  address      String?       @db.VarChar(255)
+  date_created DateTime      @default(now()) @db.Timestamp(6)
+  patient      patient?
+  staff        staff?
+  user_account user_account?
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model user_account {
+  user_id       Int          @id @default(autoincrement())
+  profile_id    Int          @unique
+  user_email    String       @unique @db.VarChar(100)
+  password_hash String       @db.VarChar(255)
+  role          String       @db.VarChar(20)
+  active_status Boolean      @default(true)
+  date_created  DateTime     @default(now()) @db.Timestamp(6)
+  audit_logs    audit_logs[]
+  profile       profile      @relation(fields: [profile_id], references: [profile_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_user_profile")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model appointments {
+  appointment_id   Int           @id @default(autoincrement())
+  patient_id       Int
+  doctor_id        Int
+  clinic_id        Int
+  appointment_date DateTime      @db.Date
+  time_slot        DateTime      @db.Time(6)
+  status           String        @default("scheduled") @db.VarChar(20)
+  date_created     DateTime      @default(now()) @db.Timestamp(6)
+  clinic           clinic        @relation(fields: [clinic_id], references: [clinic_id], onUpdate: NoAction, map: "fk_appt_clinic")
+  doctor           doctor        @relation(fields: [doctor_id], references: [doctor_id], onUpdate: NoAction, map: "fk_appt_doctor")
+  patient          patient       @relation(fields: [patient_id], references: [patient_id], onUpdate: NoAction, map: "fk_appt_patient")
+  consultation     consultation?
+
+  @@unique([doctor_id, appointment_date, time_slot], map: "uq_doctor_slot")
+  @@index([appointment_date], map: "idx_appt_date")
+  @@index([patient_id], map: "idx_appt_patient")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model audit_logs {
+  log_id           Int           @id @default(autoincrement())
+  table_name       String        @db.VarChar(50)
+  record_id        Int
+  action           String        @db.VarChar(10)
+  changed_by       Int?
+  old_status_value String?       @db.VarChar(100)
+  new_status_value String?       @db.VarChar(100)
+  changed_on       DateTime      @default(now()) @db.Timestamp(6)
+  user_account     user_account? @relation(fields: [changed_by], references: [user_id], onUpdate: NoAction, map: "fk_audit_user")
+
+  @@index([table_name, record_id], map: "idx_audit_table")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model branches_stock {
+  branch_id         Int
+  medicine_id       Int
+  quantity          Int               @default(0)
+  updated_on        DateTime          @default(now()) @db.Timestamp(6)
+  pharmacy_branches pharmacy_branches @relation(fields: [branch_id], references: [branch_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_stock_branch")
+  medicines         medicines         @relation(fields: [medicine_id], references: [medicine_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_stock_medicine")
+
+  @@id([branch_id, medicine_id])
+  @@index([medicine_id], map: "idx_stock_medicine")
+}
+
+model clinic {
+  clinic_id                 Int                         @id @default(autoincrement())
+  name                      String                      @db.VarChar(100)
+  address                   String                      @db.VarChar(255)
+  phone                     String?                     @db.VarChar(20)
+  appointments              appointments[]
+  doctor_clinic_assignments doctor_clinic_assignments[]
+}
+
+model consultation {
+  consultation_id   Int             @id @default(autoincrement())
+  appointment_id    Int             @unique
+  diagnosis         String?
+  notes             String?
+  consultation_date DateTime        @default(now()) @db.Timestamp(6)
+  appointments      appointments    @relation(fields: [appointment_id], references: [appointment_id], onUpdate: NoAction, map: "fk_consult_appt")
+  prescriptions     prescriptions[]
+}
+
+model doctor {
+  doctor_id                 Int                         @id
+  specialty                 String                      @db.VarChar(100)
+  license_number            String                      @unique @db.VarChar(50)
+  appointments              appointments[]
+  staff                     staff                       @relation(fields: [doctor_id], references: [staff_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_doctor_staff")
+  doctor_clinic_assignments doctor_clinic_assignments[]
+  prescriptions             prescriptions[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model doctor_clinic_assignments {
+  doctor_id     Int
+  clinic_id     Int
+  date_assigned DateTime @default(dbgenerated("CURRENT_DATE")) @db.Date
+  status        String   @default("active") @db.VarChar(20)
+  clinic        clinic   @relation(fields: [clinic_id], references: [clinic_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_dca_clinic")
+  doctor        doctor   @relation(fields: [doctor_id], references: [doctor_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_dca_doctor")
+
+  @@id([doctor_id, clinic_id])
+}
+
+model low_stock_alerts {
+  alert_id          Int               @id @default(autoincrement())
+  branch_id         Int
+  medicine_id       Int
+  current_quantity  Int
+  threshold         Int
+  date_created      DateTime          @default(now()) @db.Timestamp(6)
+  resolved          Boolean           @default(false)
+  pharmacy_branches pharmacy_branches @relation(fields: [branch_id], references: [branch_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_alert_branch")
+  medicines         medicines         @relation(fields: [medicine_id], references: [medicine_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_alert_medicine")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model medicines {
+  medicine_id        Int                  @id @default(autoincrement())
+  name               String               @db.VarChar(100)
+  generic_name       String?              @db.VarChar(100)
+  form               String?              @db.VarChar(50)
+  unit               String?              @db.VarChar(20)
+  reorder_threshold  Int                  @default(0)
+  branches_stock     branches_stock[]
+  low_stock_alerts   low_stock_alerts[]
+  prescription_items prescription_items[]
+}
+
+model pharmacist {
+  pharmacist_id     Int               @id
+  branch_id         Int
+  license_number    String            @unique @db.VarChar(50)
+  pharmacy_branches pharmacy_branches @relation(fields: [branch_id], references: [branch_id], onUpdate: NoAction, map: "fk_pharmacist_branch")
+  staff             staff             @relation(fields: [pharmacist_id], references: [staff_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_pharmacist_staff")
+}
+
+model pharmacy_branches {
+  branch_id        Int                @id @default(autoincrement())
+  name             String             @db.VarChar(100)
+  address          String             @db.VarChar(255)
+  phone            String?            @db.VarChar(20)
+  branches_stock   branches_stock[]
+  low_stock_alerts low_stock_alerts[]
+  pharmacist       pharmacist[]
+  prescriptions    prescriptions[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model prescription_items {
+  prescription_item_id Int           @id @default(autoincrement())
+  prescription_id      Int
+  medicine_id          Int
+  quantity_requested   Int
+  quantity_dispensed   Int           @default(0)
+  item_status          String        @default("pending") @db.VarChar(20)
+  medicines            medicines     @relation(fields: [medicine_id], references: [medicine_id], onUpdate: NoAction, map: "fk_item_medicine")
+  prescriptions        prescriptions @relation(fields: [prescription_id], references: [prescription_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_item_rx")
+
+  @@unique([prescription_id, medicine_id], map: "uq_item_per_rx")
+  @@index([medicine_id], map: "idx_rx_items_med")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model prescriptions {
+  prescription_id       Int                  @id @default(autoincrement())
+  consultation_id       Int
+  patient_id            Int
+  prescribing_doctor_id Int
+  branch_id             Int
+  status                String               @default("pending") @db.VarChar(20)
+  date_created          DateTime             @default(now()) @db.Timestamp(6)
+  prescription_items    prescription_items[]
+  pharmacy_branches     pharmacy_branches    @relation(fields: [branch_id], references: [branch_id], onUpdate: NoAction, map: "fk_rx_branch")
+  consultation          consultation         @relation(fields: [consultation_id], references: [consultation_id], onUpdate: NoAction, map: "fk_rx_consult")
+  doctor                doctor               @relation(fields: [prescribing_doctor_id], references: [doctor_id], onUpdate: NoAction, map: "fk_rx_doctor")
+  patient               patient              @relation(fields: [patient_id], references: [patient_id], onUpdate: NoAction, map: "fk_rx_patient")
+
+  @@index([patient_id], map: "idx_rx_patient")
+}
+
+model staff {
+  staff_id   Int         @id
+  hire_date  DateTime    @db.Date
+  doctor     doctor?
+  pharmacist pharmacist?
+  profile    profile     @relation(fields: [staff_id], references: [profile_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_staff_profile")
+}
