@@ -11,8 +11,11 @@ export async function withRole(prisma, appRole, work) {
   }
   const dbRole = ROLES[appRole]; // always from the fixed map, never from user input
 
-  return prisma.$transaction(async (tx) => {
-    await tx.$executeRawUnsafe(`SET LOCAL ROLE ${dbRole}`);
-    return work(tx);
-  });
+    return prisma.$transaction(
+    async (tx) => {
+      await tx.$executeRawUnsafe(`SET LOCAL ROLE ${dbRole}`);
+      return work(tx);
+    },
+    { maxWait: 10000, timeout: 15000 },
+  );
 }
