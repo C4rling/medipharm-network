@@ -77,8 +77,10 @@ placeholder hashes, so sample accounts cannot log in until real hashes are set.
 { "medicineId": 3, "quantity": 100 }
 ```
 
-Response: `{ "ok": true }`. The logged-in user's ID is passed to the procedure as `p_user_id`.
-Errors: 400 if `quantity` is not greater than 0.
+Response: `{ "ok": true, "quantity": 100 }`, where `quantity` is the new stock level.
+The logged-in user's ID is passed to the procedure as `p_user_id`.
+Errors: 400 if `quantity` is not greater than 0 or an ID is not a whole number;
+404 if the branch or medicine does not exist.
 
 ## Prescriptions
 
