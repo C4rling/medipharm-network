@@ -41,9 +41,10 @@ Edit `backend/.env`:
 
 - `DATABASE_URL`: the `medipharm_app` connection string. Ask the team lead for the password.
   Never commit this file or share the password in a screenshot.
-- `ALLOW_DEV_AUTH=true`: local testing only. Real login is not built yet, so requests send
-  `x-dev-role` (`admin`, `staff` or `patient`) and `x-dev-user-id` headers instead.
-
+- `JWT_SECRET`: a random secret for signing login tokens, different for each developer.
+  Generate one with `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`.
+  Never commit it.
+  
 Start the API:
 
 ```powershell
@@ -55,7 +56,8 @@ Check `http://localhost:3000/health`. It should return `{"ok":true}`.
 Try an endpoint:
 
 ```powershell
-$h = @{ 'x-dev-role' = 'staff'; 'x-dev-user-id' = '2' }
+$r = Invoke-RestMethod http://localhost:3000/auth/login -Method Post -ContentType 'application/json' -Body '{"email":"seed.pharmacist@medipharm.test","password":"Test1234!"}'
+$h = @{ Authorization = "Bearer $($r.token)" }
 Invoke-RestMethod http://localhost:3000/medicines -Headers $h
 ```
 
