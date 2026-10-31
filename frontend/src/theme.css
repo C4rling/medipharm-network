@@ -1,0 +1,16 @@
+/* MediPharm brand tokens. Import once (e.g. in main.jsx) and use everywhere. */
+:root {
+  /* Brand palette */
+  --mp-purple: #413074;      /* primary: buttons, headings, brand panels */
+  --mp-lavender: #736FA1;    /* secondary: borders, icons, disabled states */
+  --mp-teal: #0FB7B8;        /* accent: highlights, badges, active markers */
+  --mp-bg: #F7F8FA;          /* page background */
+
+  /* Derived shades (needed for text contrast and hover states) */
+  --mp-purple-dark: #2f2256;   /* hover on primary */
+  --mp-ink: #1e1838;           /* body text, a near-black tinted toward the purple */
+  --mp-text-muted: #5b5788;    /* secondary text; #736FA1 is too light for small text */
+  --mp-line: #dcdbe8;          /* dividers on light backgrounds */
+  --mp-surface: #ffffff;       /* inputs and cards */
+  --mp-danger: #b3261e;
+}
