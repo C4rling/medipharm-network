@@ -1,0 +1,133 @@
+.patient-form {
+  max-width: 52rem;
+  margin: 0 0 1.5rem;
+  padding: 1rem 1.25rem 1.25rem;
+  text-align: left;
+  color: var(--mp-ink);
+  background: var(--mp-surface);
+  border: 1px solid var(--mp-line);
+  border-top: 4px solid var(--mp-teal);
+  border-radius: 6px;
+}
+
+.patient-form h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.15rem;
+  color: var(--mp-purple);
+}
+
+.patient-form__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 0.85rem;
+}
+
+.patient-form__grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.patient-form__wide {
+  grid-column: 1 / -1;
+}
+
+.patient-form input,
+.patient-form select {
+  padding: 0.6rem 0.7rem;
+  font: inherit;
+  font-weight: 400;
+  color: var(--mp-ink);
+  background: var(--mp-surface);
+  border: 1px solid var(--mp-lavender);
+  border-radius: 6px;
+}
+
+.patient-form input:focus-visible,
+.patient-form select:focus-visible,
+.patient-form__btn:focus-visible {
+  outline: 3px solid var(--mp-purple);
+  outline-offset: 2px;
+}
+
+.patient-form__btn {
+  padding: 0.65rem 1.5rem;
+  font: inherit;
+  font-weight: 600;
+  color: #fff;
+  background: var(--mp-purple);
+  border: 0;
+  border-bottom: 3px solid var(--mp-teal);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.patient-form__btn:hover:not(:disabled) {
+  background: var(--mp-purple-dark);
+  border-bottom-color: var(--mp-teal);
+}
+
+.patient-form__btn:disabled {
+  background: var(--mp-lavender);
+  border-bottom-color: transparent;
+  cursor: not-allowed;
+}
+
+.patient-form__msg {
+  min-height: 1.4em;
+  margin: 0.75rem 0 0.5rem;
+  font-size: 0.95rem;
+}
+
+.patient-form__msg--error { color: var(--mp-danger); }
+.patient-form__msg--ok { color: #0a6b6c; }
+
+.patient-form input[aria-invalid="true"] {
+  border-color: var(--mp-danger);
+  border-width: 2px;
+}
+
+.patient-form__error {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--mp-danger);
+}
+
+.patient-delete {
+  padding: 0.35rem 0.8rem;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--mp-danger);
+  background: var(--mp-surface);
+  border: 1px solid var(--mp-danger);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.patient-delete:hover:not(:disabled) {
+  color: #fff;
+  background: var(--mp-danger);
+}
+
+.patient-delete:disabled {
+  color: var(--mp-text-muted);
+  border-color: var(--mp-line);
+  cursor: not-allowed;
+}
+
+.patient-delete:focus-visible {
+  outline: 3px solid var(--mp-purple);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

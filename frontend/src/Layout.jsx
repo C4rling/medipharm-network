@@ -1,8 +1,10 @@
-import { NavLink, Outlet } from 'react-router';
+   import { NavLink, Outlet } from 'react-router-dom';
 
 const roleLabel = { admin: 'Administrator', staff: 'Staff', patient: 'Patient' };
 
 export default function Layout({ user, onLogout }) {
+  const isPatient = user.role === 'patient';
+
   return (
     <div className="shell">
       <aside className="rail">
@@ -11,8 +13,16 @@ export default function Layout({ user, onLogout }) {
           <small>Network</small>
         </div>
         <nav className="nav" aria-label="Main">
-          <NavLink to="/stock">Stock</NavLink>
-          <NavLink to="/medicines">Medicines</NavLink>
+          {isPatient ? (
+            <NavLink to="/my-care">My care</NavLink>
+          ) : (
+            <>
+              <NavLink to="/stock">Stock</NavLink>
+              <NavLink to="/medicines">Medicines</NavLink>
+              <NavLink to="/prescriptions">Prescriptions</NavLink>
+              <NavLink to="/patients">Patients</NavLink>
+            </>
+          )}
         </nav>
         <div className="account">
           <span>{roleLabel[user.role] ?? user.role}</span>
