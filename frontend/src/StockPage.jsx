@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { api } from './api.js';
+import RestockForm from './RestockForm.jsx';
 
 function stockState(s) {
   if (s.quantity === 0) return 'out';
@@ -15,11 +16,15 @@ function meterWidth(s) {
   return Math.min(100, Math.round((s.quantity / (s.reorderThreshold * 2)) * 100));
 }
 
-export default function StockPage() {
+export default function StockPage({ role }) {
   const [branches, setBranches] = useState([]);
   const [branchId, setBranchId] = useState('');
   const [stock, setStock] = useState([]);
   const [error, setError] = useState('');
+  const [reloadKey, setReloadKey] = useState(0); // bump this to reload the stock table
+
+  // Only staff and admin may restock (the backend enforces this too).
+  const canRestock = role === 'staff' || role === 'admin';
 
   useEffect(() => {
     api('/branches')
@@ -35,7 +40,7 @@ export default function StockPage() {
     api(`/branches/${branchId}/stock`)
       .then((rows) => { setStock(rows); setError(''); })
       .catch((e) => { setStock([]); setError(e.message); });
-  }, [branchId]);
+  }, [branchId, reloadKey]);
 
   const flagged = stock.filter((s) => stockState(s) !== 'ok').length;
   let summary = '';
@@ -62,6 +67,14 @@ export default function StockPage() {
       </div>
 
       {error && <div role="alert" className="alert">{error}</div>}
+
+      {canRestock && branchId && (
+        <RestockForm
+          branchId={Number(branchId)}
+          medicines={stock.map((s) => ({ medicineId: s.medicineId, name: s.name }))}
+          onRestocked={() => setReloadKey((k) => k + 1)}
+        />
+      )}
 
       <div className="panel">
         <table className="ledger">

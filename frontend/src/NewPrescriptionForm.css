@@ -1,0 +1,107 @@
+/* New prescription form. Every rule starts with .rx-form so nothing leaks into other pages. */
+.rx-form {
+  margin: 0 0 1.5rem;
+  padding: 1.5rem;
+  border-top: 6px solid var(--mp-teal);
+}
+
+.rx-form h2 {
+  margin: 0 0 1rem;
+  color: var(--mp-purple);
+}
+
+.rx-form .rx-form__top {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.rx-form .rx-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.rx-form .rx-form__field label {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.rx-form select,
+.rx-form input {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  font: inherit;
+  color: var(--mp-ink);
+  background: #fff;
+  border: 1px solid var(--mp-lavender);
+  border-radius: 8px;
+}
+
+.rx-form select:hover,
+.rx-form input:hover {
+  border-color: var(--mp-purple);
+}
+
+.rx-form :focus-visible {
+  outline: 3px solid var(--mp-purple);
+  outline-offset: 2px;
+}
+
+.rx-form .rx-form__items {
+  margin: 0 0 1.25rem;
+  padding: 1rem 1rem 1.25rem;
+  border: 1px solid var(--mp-line);
+  border-radius: 8px;
+}
+
+.rx-form .rx-form__items legend {
+  padding: 0 0.4rem;
+  font-weight: 600;
+  color: var(--mp-purple);
+}
+
+.rx-form .rx-form__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.75rem;
+  margin-bottom: 0.9rem;
+}
+
+.rx-form .rx-form__field--grow {
+  flex: 1 1 16rem;
+}
+
+.rx-form .rx-form__field--qty {
+  flex: 0 0 7rem;
+}
+
+.rx-form .rx-form__remove {
+  margin-bottom: 0.1rem;
+}
+
+.rx-form .rx-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.rx-form .rx-form__submit {
+  color: #fff;
+  background: var(--mp-purple);
+  border: 0;
+  border-bottom: 3px solid var(--mp-teal);
+}
+
+.rx-form .rx-form__submit:hover:not(:disabled) {
+  background: var(--mp-purple-dark);
+}
+
+.rx-form .rx-form__submit:disabled {
+  background: var(--mp-lavender);
+  border-bottom-color: transparent;
+  cursor: not-allowed;
+}
