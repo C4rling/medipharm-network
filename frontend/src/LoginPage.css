@@ -23,7 +23,7 @@
     var(--mp-purple);
 }
 
-.label {
+.login .label {
   width: min(100%, 25rem);
   padding: 2rem 1.75rem;
   background: var(--mp-bg);
@@ -82,12 +82,12 @@
   padding: 2rem 1.5rem;
 }
 
-.form {
+.login .form {
   width: min(100%, 24rem);
   display: block;
 }
 
-.form h1 {
+.login .form h1 {
   margin: 0 0 0.35rem;
   font-size: 1.75rem;
   line-height: 1.2;
@@ -100,18 +100,18 @@
   color: var(--mp-text-muted);
 }
 
-.field {
+.login .field {
   margin-bottom: 1.1rem;
 }
 
-.field label {
+.login .field label {
   display: block;
   margin-bottom: 0.35rem;
   font-weight: 500;
   font-size: 0.95rem;
 }
 
-.field input {
+.login .field input {
   width: 100%;
   box-sizing: border-box;
   padding: 0.7rem 0.8rem;
@@ -122,7 +122,7 @@
   border-radius: 6px;
 }
 
-.field input:hover {
+.login .field input:hover {
   border-color: var(--mp-purple);
 }
 
@@ -130,7 +130,7 @@
   position: relative;
 }
 
-.field__row input {
+.login .field__row input {
   padding-right: 4.5rem;
 }
 
@@ -163,7 +163,7 @@
 }
 
 /* White text on the teal accent fails contrast, so the main button stays purple. */
-.btn {
+.login .btn {
   width: 100%;
   padding: 0.8rem 1rem;
   font: inherit;
@@ -176,12 +176,12 @@
   cursor: pointer;
 }
 
-.btn:hover:not(:disabled) {
+.login .btn:hover:not(:disabled) {
   background: var(--mp-purple-dark);
   border-bottom-color: var(--mp-teal);
 }
 
-.btn:disabled {
+.login .btn:disabled {
   background: var(--mp-lavender);
   border-bottom-color: transparent;
   cursor: not-allowed;
@@ -201,3 +201,35 @@
     display: none;
   }
 }
+
+.login__brand { position: relative; overflow: hidden; }
+.login .label { position: relative; z-index: 1; }
+
+.login__brand::before,
+.login__brand::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.04) 50%);
+  transform: rotate(-28deg);
+}
+.login__brand::before { width: 22rem; height: 8rem; top: -2rem; left: -6rem; }
+.login__brand::after { width: 26rem; height: 9rem; right: -8rem; bottom: -3rem; }
+
+.login .login__home {
+  display: inline-block;
+  margin-bottom: 1.75rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--mp-purple);
+  text-decoration: none;
+}
+.login .login__home:hover { text-decoration: underline; }
+
+.field__hint { margin: 0.35rem 0 0; font-size: 0.85rem; color: var(--mp-text-muted); }
+
+.form__switch { margin: 1.25rem 0 0; color: var(--mp-text-muted); font-size: 0.95rem; }
+.login .form__switch a { font-weight: 600; color: var(--mp-purple); }
+.form__help { margin-top: 0.6rem; }
+
+.login a:focus-visible { outline: 3px solid var(--mp-purple); outline-offset: 2px; }
