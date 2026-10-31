@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import { api, setToken } from './api.js';
+import './theme.css';
+import './LoginPage.css';
 
 export default function LoginPage({ onLogin }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
 
@@ -26,36 +29,78 @@ export default function LoginPage({ onLogin }) {
   }
 
   return (
-    <main style={{ maxWidth: 360, margin: '4rem auto', padding: '0 1rem', textAlign: 'left' }}>
-      <h1>MediPharm login</h1>
-      <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '0.75rem' }}>
-        <label>
-          Email
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            autoComplete="username"
-            style={{ display: 'block', width: '100%', padding: 8 }}
-          />
-        </label>
-        <label>
-          Password
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            autoComplete="current-password"
-            style={{ display: 'block', width: '100%', padding: 8 }}
-          />
-        </label>
-        {error && <p role="alert" style={{ color: '#d32f2f', margin: 0 }}>{error}</p>}
-        <button type="submit" disabled={busy} style={{ padding: 10 }}>
-          {busy ? 'Signing in…' : 'Sign in'}
-        </button>
-      </form>
+    <main className="login">
+      <aside className="login__brand" aria-hidden="true">
+        <div className="label">
+          <p className="label__brand">MediPharm</p>
+          <p className="label__sub">Pharmacy, clinic and stock room in one record</p>
+          <dl className="label__roles">
+            <div>
+              <dt>Pharmacist</dt>
+              <dd>Dispense medicine and keep stock counts</dd>
+            </div>
+            <div>
+              <dt>Doctor</dt>
+              <dd>See patients and write prescriptions</dd>
+            </div>
+            <div>
+              <dt>Admin</dt>
+              <dd>Manage staff accounts and reports</dd>
+            </div>
+          </dl>
+          <p className="label__note">Your role is set by your admin and decides what you can open.</p>
+        </div>
+      </aside>
+
+      <section className="login__panel">
+        <form className="form" onSubmit={handleSubmit}>
+          <h1>Sign in to MediPharm</h1>
+          <p className="form__hint">Use the account your admin created for you.</p>
+
+          <div className="field">
+            <label htmlFor="email">Email</label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              autoComplete="username"
+              autoFocus
+            />
+          </div>
+
+          <div className="field">
+            <label htmlFor="password">Password</label>
+            <div className="field__row">
+              <input
+                id="password"
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                autoComplete="current-password"
+              />
+              <button
+                type="button"
+                className="field__toggle"
+                onClick={() => setShowPassword((v) => !v)}
+                aria-pressed={showPassword}
+              >
+                {showPassword ? 'Hide' : 'Show'}
+              </button>
+            </div>
+          </div>
+
+          <p className="form__error" role="alert">{error}</p>
+
+          <button className="btn" type="submit" disabled={busy}>
+            {busy ? 'Signing in…' : 'Sign in'}
+          </button>
+
+          <p className="form__help">Forgot your password? Ask your admin to reset it.</p>
+        </form>
+      </section>
     </main>
   );
 }

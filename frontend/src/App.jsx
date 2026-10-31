@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router';
 import { api, getToken, clearToken } from './api.js';
 import LoginPage from './LoginPage.jsx';
+import Layout from './Layout.jsx';
 import StockPage from './StockPage.jsx';
+import MedicinesPage from './MedicinesPage.jsx';
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -28,16 +31,19 @@ export default function App() {
     setUser(null);
   }
 
-  if (checking) return <p style={{ padding: '2rem' }}>Loading…</p>;
+  if (checking) return <p className="content muted">Loading…</p>;
   if (!user) return <LoginPage onLogin={setUser} />;
 
   return (
-    <>
-      <header style={{ display: 'flex', justifyContent: 'space-between', padding: '0.75rem 1.5rem', borderBottom: '1px solid #ccc' }}>
-        <span>Signed in as <strong>{user.role}</strong></span>
-        <button onClick={logout}>Log out</button>
-      </header>
-      <StockPage />
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<Layout user={user} onLogout={logout} />}>
+          <Route index element={<Navigate to="/stock" replace />} />
+          <Route path="stock" element={<StockPage />} />
+          <Route path="medicines" element={<MedicinesPage />} />
+          <Route path="*" element={<p>This page does not exist.</p>} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }

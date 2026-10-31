@@ -1,0 +1,203 @@
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap");
+
+/* Fixed and full-screen so the Vite starter styles on #root and body can't squeeze it. */
+.login {
+  position: fixed;
+  inset: 0;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  text-align: left;
+  font-family: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: var(--mp-ink);
+  background: var(--mp-bg);
+}
+
+/* Brand side */
+.login__brand {
+  display: grid;
+  place-items: center;
+  padding: 3rem 2rem;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.18), rgba(255, 255, 255, 0.06) 30%, rgba(0, 0, 0, 0.12)),
+    var(--mp-purple);
+}
+
+.label {
+  width: min(100%, 25rem);
+  padding: 2rem 1.75rem;
+  background: var(--mp-bg);
+  border-radius: 6px;
+  box-shadow: 0 18px 40px rgba(15, 8, 40, 0.4);
+  border-top: 6px solid var(--mp-teal);
+}
+
+.label__brand {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--mp-purple);
+}
+
+.label__sub {
+  margin: 0.25rem 0 1.5rem;
+  color: var(--mp-text-muted);
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.label__roles {
+  margin: 0;
+  border-top: 1px solid var(--mp-line);
+}
+
+.label__roles div {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--mp-line);
+}
+
+.label__roles dt {
+  font-weight: 600;
+  color: var(--mp-purple);
+}
+
+.label__roles dd {
+  margin: 0.15rem 0 0;
+  color: var(--mp-text-muted);
+  font-size: 0.9rem;
+}
+
+.label__note {
+  margin: 1rem 0 0;
+  font-size: 0.85rem;
+  color: var(--mp-text-muted);
+  line-height: 1.4;
+}
+
+/* Form side */
+.login__panel {
+  display: grid;
+  place-items: center;
+  padding: 2rem 1.5rem;
+}
+
+.form {
+  width: min(100%, 24rem);
+  display: block;
+}
+
+.form h1 {
+  margin: 0 0 0.35rem;
+  font-size: 1.75rem;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--mp-purple);
+}
+
+.form__hint {
+  margin: 0 0 1.75rem;
+  color: var(--mp-text-muted);
+}
+
+.field {
+  margin-bottom: 1.1rem;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.field input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.7rem 0.8rem;
+  font: inherit;
+  color: var(--mp-ink);
+  background: var(--mp-surface);
+  border: 1px solid var(--mp-lavender);
+  border-radius: 6px;
+}
+
+.field input:hover {
+  border-color: var(--mp-purple);
+}
+
+.field__row {
+  position: relative;
+}
+
+.field__row input {
+  padding-right: 4.5rem;
+}
+
+.field__toggle {
+  position: absolute;
+  top: 50%;
+  right: 0.4rem;
+  transform: translateY(-50%);
+  padding: 0.35rem 0.6rem;
+  font: inherit;
+  font-size: 0.9rem;
+  color: var(--mp-purple);
+  background: none;
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.login input:focus-visible,
+.login button:focus-visible {
+  outline: 3px solid var(--mp-purple);
+  outline-offset: 2px;
+}
+
+.form__error {
+  min-height: 1.4em;
+  margin: 0 0 0.75rem;
+  color: var(--mp-danger);
+  font-size: 0.95rem;
+}
+
+/* White text on the teal accent fails contrast, so the main button stays purple. */
+.btn {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  font: inherit;
+  font-weight: 600;
+  color: #fff;
+  background: var(--mp-purple);
+  border: 0;
+  border-bottom: 3px solid var(--mp-teal);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--mp-purple-dark);
+  border-bottom-color: var(--mp-teal);
+}
+
+.btn:disabled {
+  background: var(--mp-lavender);
+  border-bottom-color: transparent;
+  cursor: not-allowed;
+}
+
+.form__help {
+  margin: 1.25rem 0 0;
+  color: var(--mp-text-muted);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 760px) {
+  .login {
+    grid-template-columns: 1fr;
+  }
+  .login__brand {
+    display: none;
+  }
+}
