@@ -20,7 +20,7 @@ The role name comes from a fixed map in the server code, never from user input.
 |-----------|------------------------|-------|
 | `admin`   | `medipharm_admin`      | |
 | `staff`   | `medipharm_staff`      | pharmacists and doctors |
-| `patient` | _confirm name in 002_  | check `migrations/002_create_roles.sql` |
+| `patient` | `medipharm_patient`  | limited booking and read access |
 
 The API connects as `medipharm_app` and switches role inside the transaction.
 `user_account.role` decides which database role a logged-in user gets.
@@ -59,8 +59,9 @@ Response:
 { "token": "...", "user": { "userId": 2, "role": "staff", "email": "..." } }
 ```
 
-Passwords are checked against `user_account.password_hash` (bcrypt). The sample data uses
-placeholder hashes, so sample accounts cannot log in until real hashes are set.
+Passwords are checked against `user_account.password_hash` (bcrypt). In `002`,
+`medipharm_app` has no SELECT on that column, so login needs a database function
+to read it (see open question 5).
 
 ## Medicines and stock
 
@@ -77,10 +78,8 @@ placeholder hashes, so sample accounts cannot log in until real hashes are set.
 { "medicineId": 3, "quantity": 100 }
 ```
 
-Response: `{ "ok": true, "quantity": 100 }`, where `quantity` is the new stock level.
-The logged-in user's ID is passed to the procedure as `p_user_id`.
-Errors: 400 if `quantity` is not greater than 0 or an ID is not a whole number;
-404 if the branch or medicine does not exist.
+Response: `{ "ok": true }`. The logged-in user's ID is passed to the procedure as `p_user_id`.
+Errors: 400 if `quantity` is not greater than 0.
 
 ## Prescriptions
 
@@ -148,3 +147,4 @@ Depends on the appointment-conflict procedure, which is still to be written.
 3. Should procedures raise errors with their own error codes, so the API does not have to
    match on message text?
 4. Who writes the raw SQL calls to the procedures, and who writes the routes around them?
+5. How does login read `password_hash`? Suggestion: a `SECURITY DEFINER` function that returns the hash for one email, executable by `medipharm_app` only.
