@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { api, setToken } from './api.js';
 import './theme.css';
 import './LoginPage.css';
 
 export default function LoginPage({ onLogin }) {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -20,6 +22,7 @@ export default function LoginPage({ onLogin }) {
         body: JSON.stringify({ email, password }),
       });
       setToken(token);
+      navigate('/', { replace: true });
       onLogin(user);
     } catch (err) {
       setError(err.message);
@@ -47,15 +50,20 @@ export default function LoginPage({ onLogin }) {
               <dt>Admin</dt>
               <dd>Manage staff accounts and reports</dd>
             </div>
+            <div>
+              <dt>Patient</dt>
+              <dd>See your doctor, medication and appointments</dd>
+            </div>
           </dl>
-          <p className="label__note">Your role is set by your admin and decides what you can open.</p>
+          <p className="label__note">Your role is set when your account is created and decides what you can open.</p>
         </div>
       </aside>
 
       <section className="login__panel">
         <form className="form" onSubmit={handleSubmit}>
+          <Link className="login__home" to="/">Back to home</Link>
           <h1>Sign in to MediPharm</h1>
-          <p className="form__hint">Use the account your admin created for you.</p>
+          <p className="form__hint">Use your MediPharm account.</p>
 
           <div className="field">
             <label htmlFor="email">Email</label>
@@ -98,6 +106,9 @@ export default function LoginPage({ onLogin }) {
             {busy ? 'Signing in…' : 'Sign in'}
           </button>
 
+          <p className="form__switch">
+            New patient? <Link to="/signup">Create an account</Link>
+          </p>
           <p className="form__help">Forgot your password? Ask your admin to reset it.</p>
         </form>
       </section>

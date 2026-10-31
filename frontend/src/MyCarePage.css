@@ -1,0 +1,45 @@
+.care-section {
+  margin: 0 0 2rem;
+  text-align: left;
+}
+
+.care-section h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.2rem;
+  color: var(--mp-purple);
+}
+
+.care-doctors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.care-doctors li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 14rem;
+  padding: 0.85rem 1.1rem;
+  background: var(--mp-surface);
+  border: 1px solid var(--mp-line);
+  border-left: 4px solid var(--mp-teal);
+  border-radius: 6px;
+}
+
+.care-rx {
+  margin-bottom: 1rem;
+}
+
+.care-rx__head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--mp-line);
+}

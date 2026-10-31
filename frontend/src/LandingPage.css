@@ -1,0 +1,357 @@
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap");
+
+/* Fixed and full-screen so the Vite starter styles on #root and body can't squeeze it. */
+.landing {
+  position: fixed;
+  inset: 0;
+  overflow-y: auto;
+  text-align: left;
+  font-family: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  line-height: 1.55;
+  color: var(--mp-ink);
+  background: var(--mp-bg);
+}
+
+.landing *,
+.landing *::before,
+.landing *::after {
+  box-sizing: border-box;
+}
+
+.landing h1,
+.landing h2,
+.landing h3,
+.landing p,
+.landing dl,
+.landing dd,
+.landing ol {
+  margin: 0;
+  padding: 0;
+}
+
+.landing .lp-wrap {
+  width: min(100% - 3rem, 70rem);
+  margin-inline: auto;
+}
+
+.landing :focus-visible {
+  outline: 3px solid var(--mp-purple);
+  outline-offset: 3px;
+}
+
+.landing .lp-hero :focus-visible,
+.landing .lp-cta :focus-visible {
+  outline-color: #fff;
+}
+
+.landing .lp-skip {
+  position: absolute;
+  top: 0.75rem;
+  left: -999px;
+  z-index: 10;
+  padding: 0.5rem 0.9rem;
+  color: var(--mp-purple);
+  background: #fff;
+  border-radius: 6px;
+}
+
+.landing .lp-skip:focus {
+  left: 0.75rem;
+}
+
+/* ---- Buttons ---- */
+.landing .lp-btn {
+  display: inline-block;
+  padding: 0.7rem 1.3rem;
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.landing .lp-btn--light {
+  color: var(--mp-purple);
+  background: #fff;
+}
+
+.landing .lp-btn--light:hover {
+  background: #f1f0f8;
+}
+
+.landing .lp-btn--ghost {
+  color: #fff;
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.landing .lp-btn--ghost:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: #fff;
+}
+
+/* ---- Hero ---- */
+.landing .lp-hero {
+  color: #fff;
+  background: var(--mp-purple);
+}
+
+.landing .lp-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem 0;
+}
+
+.landing .lp-mark {
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #fff;
+  text-decoration: none;
+}
+
+.landing .lp-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.landing .lp-hero__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+  gap: 3.5rem;
+  align-items: center;
+  padding: 3rem 0 5.5rem;
+}
+
+.landing .lp-hero h1 {
+  max-width: 17ch;
+  font-size: clamp(2.2rem, 4.6vw, 3.6rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+.landing .lp-lede {
+  max-width: 34rem;
+  margin-top: 1.25rem;
+  font-size: 1.15rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.landing .lp-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.landing .lp-note {
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* The one memorable element: a pharmacy label */
+.landing .lp-label {
+  padding: 1.75rem;
+  color: var(--mp-ink);
+  background: var(--mp-bg);
+  border-top: 6px solid var(--mp-teal);
+  border-radius: 6px;
+  box-shadow: 0 22px 44px rgba(15, 8, 40, 0.4);
+  transform: rotate(-1.2deg);
+}
+
+.landing .lp-label__tag {
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--mp-text-muted);
+}
+
+.landing .lp-label dl {
+  border-top: 1px solid var(--mp-line);
+}
+
+.landing .lp-label dl div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--mp-line);
+}
+
+.landing .lp-label dt {
+  color: var(--mp-text-muted);
+  font-size: 0.95rem;
+}
+
+.landing .lp-label dd {
+  font-weight: 600;
+  text-align: right;
+}
+
+.landing .lp-pill {
+  display: inline-block;
+  padding: 0.15rem 0.7rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #0a6b6c;
+  background: #e0f6f6;
+  border-radius: 999px;
+}
+
+/* ---- Sections ---- */
+.landing .lp-section {
+  padding: 4.5rem 0;
+}
+
+.landing .lp-section--tint {
+  background: #f1f0f8;
+}
+
+.landing .lp-section h2 {
+  font-size: clamp(1.6rem, 3vw, 2.1rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--mp-purple);
+}
+
+.landing .lp-intro {
+  max-width: 38rem;
+  margin-top: 0.6rem;
+  color: var(--mp-text-muted);
+}
+
+.landing .lp-who {
+  margin-top: 2rem;
+  border-top: 1px solid var(--mp-line);
+}
+
+.landing .lp-who div {
+  display: grid;
+  grid-template-columns: 12rem minmax(0, 1fr);
+  gap: 1.5rem;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--mp-line);
+}
+
+.landing .lp-who dt {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--mp-purple);
+}
+
+.landing .lp-who dd {
+  max-width: 40rem;
+  color: var(--mp-text-muted);
+}
+
+.landing .lp-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+  list-style: none;
+  counter-reset: step;
+}
+
+.landing .lp-steps li {
+  padding-top: 1rem;
+  border-top: 4px solid var(--mp-lavender);
+  counter-increment: step;
+}
+
+.landing .lp-steps li::before {
+  content: counter(step);
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--mp-purple);
+}
+
+.landing .lp-steps h3 {
+  font-size: 1.15rem;
+}
+
+.landing .lp-steps p {
+  max-width: 24rem;
+  margin-top: 0.3rem;
+  color: var(--mp-text-muted);
+}
+
+/* ---- Closing call to action ---- */
+.landing .lp-cta {
+  padding: 3.5rem 0;
+  color: #fff;
+  background: var(--mp-purple-dark);
+}
+
+.landing .lp-cta__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.landing .lp-cta h2 {
+  max-width: 24ch;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+.landing .lp-cta .lp-actions {
+  margin-top: 0;
+}
+
+/* ---- Footer ---- */
+.landing .lp-footer {
+  padding: 1.5rem 0;
+  font-size: 0.9rem;
+  color: var(--mp-text-muted);
+}
+
+.landing .lp-footer__inner {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.landing .lp-footer__links {
+  display: flex;
+  gap: 1.25rem;
+}
+
+.landing .lp-footer a {
+  color: var(--mp-purple);
+}
+
+/* ---- Small screens ---- */
+@media (max-width: 860px) {
+  .landing .lp-hero__grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    padding: 2rem 0 3.5rem;
+  }
+  .landing .lp-label {
+    transform: none;
+  }
+  .landing .lp-section {
+    padding: 3rem 0;
+  }
+  .landing .lp-who div {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+  }
+}
