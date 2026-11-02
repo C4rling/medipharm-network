@@ -6,6 +6,8 @@ import inventoryRoutes from './routes/inventory.js';
 import pharmacyRoutes from './routes/pharmacy.js';
 import prescriptionRoutes from './routes/prescriptions.js';   // new
 import patientsRouter from './routes/patients.js';
+import appointmentsRoutes from './routes/appointments.js';
+import stockCheckRoutes from './routes/stockCheck.js';
 
 
 const app = express();
@@ -19,5 +21,7 @@ app.use(inventoryRoutes);
 app.use(pharmacyRoutes);
 app.use(prescriptionRoutes);
 app.use(patientsRouter);                                  // new
+app.use(appointmentsRoutes);
+app.use(stockCheckRoutes);
 
 app.listen(process.env.PORT || 3000, () => console.log('API running'));
