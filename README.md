@@ -51,6 +51,7 @@ Start the API:
 npm start
 ```
 
+
 Check `http://localhost:3000/health`. It should return `{"ok":true}`.
 
 Try an endpoint:
