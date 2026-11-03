@@ -1,0 +1,135 @@
+/* Doctor's patient list and consultation page.
+   Every rule starts with a .dp class so nothing leaks into other pages. */
+.dp-link {
+  display: inline-block;
+  text-decoration: none;
+}
+
+.dp-form {
+  margin: 0 0 2rem;
+  padding: 1.5rem;
+  border-top: 6px solid var(--mp-teal);
+}
+
+.dp-form h2,
+.dp-summary h2 {
+  margin: 0 0 1rem;
+  font-size: 1.25rem;
+  color: var(--mp-purple);
+}
+
+.dp-summary {
+  padding: 1.5rem;
+}
+
+.dp-summary h3 {
+  margin: 1.25rem 0 0.5rem;
+  color: var(--mp-purple);
+}
+
+.dp-form .dp-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+}
+
+.dp-form .dp-field label {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.dp-form textarea,
+.dp-form select,
+.dp-form input {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  font: inherit;
+  color: var(--mp-ink);
+  background: #fff;
+  border: 1px solid var(--mp-lavender);
+  border-radius: 8px;
+}
+
+.dp-form textarea {
+  resize: vertical;
+}
+
+.dp-form textarea:hover,
+.dp-form select:hover,
+.dp-form input:hover {
+  border-color: var(--mp-purple);
+}
+
+.dp-form :focus-visible {
+  outline: 3px solid var(--mp-purple);
+  outline-offset: 2px;
+}
+
+.dp-form .dp-items {
+  margin: 0 0 1.25rem;
+  padding: 1rem 1rem 1.25rem;
+  border: 1px solid var(--mp-line);
+  border-radius: 8px;
+}
+
+.dp-form .dp-items legend {
+  padding: 0 0.4rem;
+  font-weight: 600;
+  color: var(--mp-purple);
+}
+
+.dp-form .dp-hint {
+  margin: 0 0 1rem;
+  font-size: 0.9rem;
+  color: var(--mp-text-muted);
+}
+
+.dp-form .dp-warn {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #8a5a00;
+}
+
+.dp-form .dp-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.dp-form .dp-row .btn {
+  margin-top: 1.7rem;
+}
+
+.dp-form .dp-field--grow {
+  flex: 1 1 16rem;
+}
+
+.dp-form .dp-field--qty {
+  flex: 0 0 7rem;
+}
+
+.dp-form .dp-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.dp-form .dp-submit {
+  color: #fff;
+  background: var(--mp-purple);
+  border: 0;
+  border-bottom: 3px solid var(--mp-teal);
+}
+
+.dp-form .dp-submit:hover:not(:disabled) {
+  background: var(--mp-purple-dark);
+}
+
+.dp-form .dp-submit:disabled {
+  background: var(--mp-lavender);
+  border-bottom-color: transparent;
+  cursor: not-allowed;
+}

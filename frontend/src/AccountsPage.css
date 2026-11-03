@@ -1,0 +1,117 @@
+/* Accounts page forms. Every rule starts with .acct-form so nothing leaks into other pages. */
+.acct-form {
+  margin: 0 0 1.5rem;
+  padding: 1.5rem;
+  border-top: 6px solid var(--mp-teal);
+}
+
+.acct-form h2 {
+  margin: 0 0 1rem;
+  font-size: 1.25rem;
+  color: var(--mp-purple);
+}
+
+.acct-form .acct-form__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 1rem;
+}
+
+.acct-form .acct-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.acct-form .acct-form__field label {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.acct-form .acct-form__row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.acct-form input {
+  width: 100%;
+  min-width: 0;
+  padding: 0.6rem 0.8rem;
+  font: inherit;
+  color: var(--mp-ink);
+  background: #fff;
+  border: 1px solid var(--mp-lavender);
+  border-radius: 8px;
+}
+
+.acct-form input:hover {
+  border-color: var(--mp-purple);
+}
+
+.acct-form :focus-visible {
+  outline: 3px solid var(--mp-purple);
+  outline-offset: 2px;
+}
+
+.acct-form .acct-form__hint {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--mp-text-muted);
+}
+
+.acct-form .acct-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.acct-form .acct-form__submit {
+  color: #fff;
+  background: var(--mp-purple);
+  border: 0;
+  border-bottom: 3px solid var(--mp-teal);
+}
+
+.acct-form .acct-form__submit:hover:not(:disabled) {
+  background: var(--mp-purple-dark);
+}
+
+.acct-form .acct-form__submit:disabled {
+  background: var(--mp-lavender);
+  border-bottom-color: transparent;
+  cursor: not-allowed;
+}
+
+/* Account type section inside the Manage panel */
+.acct-form select {
+  width: 100%;
+  min-width: 0;
+  padding: 0.6rem 0.8rem;
+  font: inherit;
+  color: var(--mp-ink);
+  background: #fff;
+  border: 1px solid var(--mp-lavender);
+  border-radius: 8px;
+}
+
+.acct-form select:hover {
+  border-color: var(--mp-purple);
+}
+
+.acct-form .acct-type {
+  margin: 1.5rem 0 0;
+  padding: 1rem 1rem 1.25rem;
+  border: 1px solid var(--mp-line);
+  border-radius: 8px;
+}
+
+.acct-form .acct-type legend {
+  padding: 0 0.4rem;
+  font-weight: 600;
+  color: var(--mp-purple);
+}
+
+.acct-form .acct-type .acct-form__hint {
+  margin: 0 0 1rem;
+}

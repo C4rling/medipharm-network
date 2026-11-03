@@ -8,6 +8,10 @@ import prescriptionRoutes from './routes/prescriptions.js';   // new
 import patientsRouter from './routes/patients.js';
 import appointmentsRoutes from './routes/appointments.js';
 import stockCheckRoutes from './routes/stockCheck.js';
+import accountsRouter from './routes/accounts.js';
+import scheduleRouter from './routes/schedule.js';
+import doctorRoutes from './routes/doctor.js';
+   
 
 
 const app = express();
@@ -23,5 +27,8 @@ app.use(prescriptionRoutes);
 app.use(patientsRouter);                                  // new
 app.use(appointmentsRoutes);
 app.use(stockCheckRoutes);
+app.use(accountsRouter);
+app.use(scheduleRouter);
+app.use(doctorRoutes);
 
 app.listen(process.env.PORT || 3000, () => console.log('API running'));

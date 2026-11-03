@@ -1,0 +1,36 @@
+/* The pharmacist's alert: a count on the Prescriptions menu link and a New tag on rows. */
+.shell .nav .nav-badge {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  margin-left: auto;
+  padding: 0 0.45rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--mp-purple-dark);
+  background: var(--mp-teal);
+  border-radius: 999px;
+}
+
+.shell .nav .nav-badge .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.shell .content .rx-new {
+  display: inline-block;
+  margin-left: 0.6rem;
+  padding: 0.1rem 0.55rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--mp-purple-dark);
+  background: var(--mp-teal);
+  border-radius: 999px;
+  vertical-align: middle;
+}
