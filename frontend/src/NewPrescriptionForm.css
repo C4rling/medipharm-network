@@ -105,3 +105,48 @@
   border-bottom-color: transparent;
   cursor: not-allowed;
 }
+
+/* Added for the appointment, diagnosis and notes fields */
+.rx-form textarea {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  font: inherit;
+  color: var(--mp-ink);
+  background: #fff;
+  border: 1px solid var(--mp-lavender);
+  border-radius: 8px;
+  resize: vertical;
+}
+
+.rx-form textarea:hover {
+  border-color: var(--mp-purple);
+}
+
+.rx-form .rx-form__hint {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--mp-text-muted);
+}
+
+.rx-form .rx-form__wide {
+  grid-column: 1 / -1;
+}
+
+.rx-form select:disabled {
+  background: #f1f0f8;
+  cursor: not-allowed;
+}
+
+/* Pharmacy branch is read-only: it follows the appointment's clinic */
+.rx-form .rx-form__label {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.rx-form .rx-form__static {
+  margin: 0;
+  padding: 0.6rem 0.8rem;
+  background: #f1f0f8;
+  border: 1px solid var(--mp-line);
+  border-radius: 8px;
+}

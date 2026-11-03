@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { prisma } from '../lib/prisma.js';
 import { authenticate } from '../middleware/auth.js';
+import { staffDetailsFor } from '../lib/staffDetails.js';
 
 if (!process.env.JWT_SECRET) {
   throw new Error('JWT_SECRET is not set in backend/.env');
@@ -33,12 +34,14 @@ router.post('/auth/login', async (req, res) => {
     if (!user || !ok || !user.active_status) {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
+    // For staff: is this person a doctor or a pharmacist (and at which branch)?
+    const extra = user.role === 'staff' ? await staffDetailsFor(user.user_id) : {};
     const token = jwt.sign(
-      { userId: user.user_id, role: user.role },
+      { userId: user.user_id, role: user.role, ...extra },
       process.env.JWT_SECRET,
       { algorithm: 'HS256', expiresIn: process.env.JWT_EXPIRES_IN ?? '8h' },
     );
-    res.json({ token, user: { userId: user.user_id, role: user.role, email: loginEmail } });
+    res.json({ token, user: { userId: user.user_id, role: user.role, email: loginEmail, ...extra } });
   } catch (e) {
     console.error(e);
     res.status(500).json({ error: 'Server error' });
@@ -81,6 +84,7 @@ router.post('/auth/register', async (req, res) => {
 
   if (gender && !GENDERS.includes(gender)) return bad('Gender must be male, female or other');
   if ((phone?.length ?? 0) > 20) return bad('Phone is too long (maximum 20 characters)');
+  if (!address) return bad('Address is required');
   if ((address?.length ?? 0) > 255) return bad('Address is too long (maximum 255 characters)');
   if ((emergencyContact?.length ?? 0) > 100) return bad('Emergency contact is too long (maximum 100 characters)');
 

@@ -1,9 +1,15 @@
-   import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet } from 'react-router-dom';
 
 const roleLabel = { admin: 'Administrator', staff: 'Staff', patient: 'Patient' };
 
 export default function Layout({ user, onLogout }) {
   const isPatient = user.role === 'patient';
+  const isAdmin = user.role === 'admin';
+  const isDoctor = user.position === 'doctor';
+  const isPharmacist = user.position === 'pharmacist';
+  const label = isDoctor
+    ? 'Doctor'
+    : isPharmacist ? 'Pharmacist' : (roleLabel[user.role] ?? user.role);
 
   return (
     <div className="shell">
@@ -14,18 +20,23 @@ export default function Layout({ user, onLogout }) {
         </div>
         <nav className="nav" aria-label="Main">
           {isPatient ? (
-            <NavLink to="/my-care">My care</NavLink>
+            <>
+              <NavLink to="/my-care">My care</NavLink>
+              <NavLink to="/book">Book appointment</NavLink>
+            </>
           ) : (
             <>
-              <NavLink to="/stock">Stock</NavLink>
-              <NavLink to="/medicines">Medicines</NavLink>
+              {isDoctor && <NavLink to="/schedule">My schedule</NavLink>}
+              {!isDoctor && <NavLink to="/stock">Stock</NavLink>}
+              {!isDoctor && <NavLink to="/medicines">Medicines</NavLink>}
               <NavLink to="/prescriptions">Prescriptions</NavLink>
-              <NavLink to="/patients">Patients</NavLink>
+              {!isPharmacist && <NavLink to="/patients">Patients</NavLink>}
+              {isAdmin && <NavLink to="/accounts">Accounts</NavLink>}
             </>
           )}
         </nav>
         <div className="account">
-          <span>{roleLabel[user.role] ?? user.role}</span>
+          <span>{label}</span>
           <button className="btn" onClick={onLogout}>Log out</button>
         </div>
       </aside>

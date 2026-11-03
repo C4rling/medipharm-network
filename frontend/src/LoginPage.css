@@ -233,3 +233,29 @@
 .form__help { margin-top: 0.6rem; }
 
 .login a:focus-visible { outline: 3px solid var(--mp-purple); outline-offset: 2px; }
+
+.login .form__pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.login .field select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.7rem 0.8rem;
+  font: inherit;
+  color: var(--mp-ink);
+  background: var(--mp-surface, #fff);
+  border: 1px solid var(--mp-lavender);
+  border-radius: 6px;
+}
+
+.login .field select:hover {
+  border-color: var(--mp-purple);
+}
+
+.login select:focus-visible {
+  outline: 3px solid var(--mp-purple);
+  outline-offset: 2px;
+}

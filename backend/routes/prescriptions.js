@@ -2,7 +2,7 @@
 //
 // Endpoints for the screens:
 //   GET  /prescriptions          list (staff, admin)
-//   GET  /prescriptions/options  appointments, branches and medicines for the new-prescription form (staff, admin)
+//   GET  /prescriptions/options  appointments (with each clinic's branch) and medicines for the new-prescription form (staff, admin)
 //   POST /prescriptions          create a prescription with its items (staff, admin)
 //   GET  /prescriptions/:id      one prescription with its items (staff, admin)
 //   GET  /alerts                 low-stock alerts (staff, admin)
@@ -73,6 +73,8 @@ router.get('/prescriptions/options', ...staffOrAdmin, async (req, res) => {
                a.doctor_id,
                dp.first_name || ' ' || dp.last_name AS doctor_name,
                c.name AS clinic,
+               c.branch_id AS branch_id,
+               b.name AS branch_name,
                to_char(a.appointment_date, 'YYYY-MM-DD') AS date,
                to_char(a.time_slot, 'HH24:MI') AS time,
                a.status
@@ -80,14 +82,13 @@ router.get('/prescriptions/options', ...staffOrAdmin, async (req, res) => {
           JOIN profile pp ON pp.profile_id = a.patient_id
           JOIN profile dp ON dp.profile_id = a.doctor_id
           JOIN clinic c ON c.clinic_id = a.clinic_id
-         WHERE a.status <> 'cancelled'
+          LEFT JOIN pharmacy_branches b ON b.branch_id = c.branch_id
+         WHERE a.status IN ('scheduled', 'completed')
          ORDER BY a.appointment_date DESC, a.time_slot DESC
          LIMIT 500`;
-      const branches = await tx.$queryRaw`
-        SELECT branch_id AS id, name FROM pharmacy_branches ORDER BY name`;
       const medicines = await tx.$queryRaw`
         SELECT medicine_id AS id, name, unit FROM medicines ORDER BY name`;
-      return { appointments, branches, medicines };
+      return { appointments, medicines };
     });
     res.json(data);
   } catch (err) {
@@ -110,9 +111,7 @@ router.post('/prescriptions', ...staffOrAdmin, async (req, res) => {
   const optionalText = (v) => (typeof v === 'string' && v.trim() ? v.trim() : null);
 
   const appointmentId = toId(body.appointmentId);
-  const branchId = toId(body.branchId);
   if (!appointmentId) return bad('Choose the appointment this prescription comes from');
-  if (!branchId) return bad('Choose a branch');
 
   const diagnosis = optionalText(body.diagnosis);
   const notes = optionalText(body.notes);
@@ -141,19 +140,27 @@ router.post('/prescriptions', ...staffOrAdmin, async (req, res) => {
 
   try {
     const result = await withRole(prisma, req.user.role, async (tx) => {
-      const appt = await tx.$queryRaw`
-        SELECT patient_id AS "patientId", doctor_id AS "doctorId", status
-          FROM appointments
-         WHERE appointment_id = ${appointmentId}::int`;
-      if (appt.length === 0) return { problem: 'That appointment does not exist' };
-      if (appt[0].status === 'cancelled') {
-        return { problem: 'A prescription cannot come from a cancelled appointment' };
-      }
-      const { patientId, doctorId } = appt[0];
+      // Tell the audit trigger on prescriptions who is acting, the same way
+      // create_appointment does in migration 014.
+      await tx.$queryRaw`
+        SELECT set_config('app.current_user_id', ${String(req.user.userId)}, true)`;
 
-      const branch = await tx.$queryRaw`
-        SELECT 1 FROM pharmacy_branches WHERE branch_id = ${branchId}::int`;
-      if (branch.length === 0) return { problem: 'That branch does not exist' };
+      const appt = await tx.$queryRaw`
+        SELECT a.patient_id AS "patientId", a.doctor_id AS "doctorId", a.status,
+               c.branch_id AS "branchId"
+          FROM appointments a
+          JOIN clinic c ON c.clinic_id = a.clinic_id
+         WHERE a.appointment_id = ${appointmentId}::int`;
+      if (appt.length === 0) return { problem: 'That appointment does not exist' };
+      if (!['scheduled', 'completed'].includes(appt[0].status)) {
+        return { problem: 'A prescription can only come from a scheduled or completed appointment' };
+      }
+      const { patientId, doctorId, branchId } = appt[0];
+
+      // The pharmacy branch is the one linked to the appointment's clinic.
+      if (!branchId) {
+        return { problem: 'The clinic for this appointment is not linked to a pharmacy branch yet' };
+      }
 
       for (const it of items) {
         const med = await tx.$queryRaw`

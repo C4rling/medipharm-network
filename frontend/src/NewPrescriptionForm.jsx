@@ -9,7 +9,6 @@ export default function NewPrescriptionForm({ onCreated, onCancel }) {
   const [options, setOptions] = useState(null);
   const [patientId, setPatientId] = useState('');
   const [appointmentId, setAppointmentId] = useState('');
-  const [branchId, setBranchId] = useState('');
   const [diagnosis, setDiagnosis] = useState('');
   const [notes, setNotes] = useState('');
   const [items, setItems] = useState([newItem()]);
@@ -37,6 +36,11 @@ export default function NewPrescriptionForm({ onCreated, onCancel }) {
     [options, patientId],
   );
 
+  const selected = useMemo(
+    () => appointments.find((a) => String(a.id) === appointmentId) ?? null,
+    [appointments, appointmentId],
+  );
+
   function updateItem(key, changes) {
     setItems((list) => list.map((it) => (it.key === key ? { ...it, ...changes } : it)));
   }
@@ -51,7 +55,9 @@ export default function NewPrescriptionForm({ onCreated, onCancel }) {
 
     if (!patientId) return setError('Choose a patient.');
     if (!appointmentId) return setError('Choose the appointment this prescription comes from.');
-    if (!branchId) return setError('Choose a branch.');
+    if (!selected?.branch_id) {
+      return setError('The clinic for this appointment is not linked to a pharmacy branch yet, so a prescription cannot be created from it.');
+    }
     for (const it of items) {
       if (!it.medicineId) return setError('Choose a medicine for every row, or remove the empty row.');
       const q = Number(it.quantity);
@@ -64,7 +70,6 @@ export default function NewPrescriptionForm({ onCreated, onCancel }) {
         method: 'POST',
         body: JSON.stringify({
           appointmentId: Number(appointmentId),
-          branchId: Number(branchId),
           diagnosis,
           notes,
           items: items.map((it) => ({
@@ -135,13 +140,13 @@ export default function NewPrescriptionForm({ onCreated, onCancel }) {
             </div>
 
             <div className="rx-form__field">
-              <label htmlFor="rx-branch">Pharmacy branch *</label>
-              <select id="rx-branch" value={branchId} onChange={(e) => setBranchId(e.target.value)}>
-                <option value="">Choose a branch</option>
-                {options.branches.map((b) => (
-                  <option key={b.id} value={b.id}>{b.name}</option>
-                ))}
-              </select>
+              <span className="rx-form__label" id="rx-branch-label">Pharmacy branch</span>
+              <p className="rx-form__static" aria-labelledby="rx-branch-label">
+                {!selected && 'Set by the appointment’s clinic'}
+                {selected && selected.branch_name}
+                {selected && !selected.branch_name && 'Not linked to a pharmacy branch yet'}
+              </p>
+              <p className="rx-form__hint">It is the branch linked to the appointment’s clinic.</p>
             </div>
           </div>
 
