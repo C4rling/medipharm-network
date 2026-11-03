@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { api } from './api.js';
 import './SchedulePages.css';
 
+const norm = (v) => (v ?? '').trim().toLowerCase();
+
 function fmt12(t) {
   const [h, m] = t.split(':').map(Number);
   const hour = h % 12 === 0 ? 12 : h % 12;
@@ -21,6 +23,7 @@ function fmtDate(d) {
 export default function BookAppointmentPage() {
   const [slots, setSlots] = useState([]);
   const [loaded, setLoaded] = useState(false);
+  const [specialty, setSpecialty] = useState('');
   const [clinicId, setClinicId] = useState('');
   const [doctorId, setDoctorId] = useState('');
   const [date, setDate] = useState('');
@@ -52,18 +55,54 @@ export default function BookAppointmentPage() {
     return [...byId.entries()].map(([id, name]) => ({ id, name }));
   }, [slots]);
 
+  // Specialties are compared ignoring capitals and spaces, so "Cardiology" and
+  // "cardiology " count as one. Only specialties that have open times are listed.
+  const specialties = useMemo(() => {
+    const byKey = new Map();
+    for (const s of slots) {
+      const key = norm(s.specialty);
+      if (key && !byKey.has(key)) byKey.set(key, s.specialty.trim());
+    }
+    return [...byKey.entries()]
+      .map(([key, label]) => ({ key, label }))
+      .sort((a, b) => a.label.localeCompare(b.label));
+  }, [slots]);
+
+  // The doctor list narrows to the chosen specialty.
   const doctors = useMemo(() => {
     const byId = new Map();
-    for (const s of slots) byId.set(s.doctorId, s.doctorName);
+    for (const s of slots) {
+      if (specialty && norm(s.specialty) !== specialty) continue;
+      byId.set(s.doctorId, s.doctorName);
+    }
     return [...byId.entries()].map(([id, name]) => ({ id, name }));
-  }, [slots]);
+  }, [slots, specialty]);
 
   const shown = slots.filter(
     (s) =>
+      (!specialty || norm(s.specialty) === specialty) &&
       (!clinicId || String(s.clinicId) === clinicId) &&
       (!doctorId || String(s.doctorId) === doctorId) &&
       (!date || s.date === date),
   );
+
+  const hasFilters = Boolean(specialty || clinicId || doctorId || date);
+
+  function changeSpecialty(value) {
+    setSpecialty(value);
+    // Drop a chosen doctor who is not in the new specialty.
+    if (doctorId && value) {
+      const doc = slots.find((s) => String(s.doctorId) === doctorId);
+      if (doc && norm(doc.specialty) !== value) setDoctorId('');
+    }
+  }
+
+  function clearFilters() {
+    setSpecialty('');
+    setClinicId('');
+    setDoctorId('');
+    setDate('');
+  }
 
   async function book() {
     setError('');
@@ -87,7 +126,7 @@ export default function BookAppointmentPage() {
     <>
       <h1>Book an appointment</h1>
       <p className="page-sub">
-        Pick a time your doctor has made available. Times that are taken are not shown.
+        Narrow the list by specialty, doctor, clinic or date, then pick an available time. Times that are taken are not shown.
       </p>
 
       {notice && (
@@ -103,11 +142,11 @@ export default function BookAppointmentPage() {
 
       <div className="toolbar sched-filters">
         <label>
-          Clinic
-          <select value={clinicId} onChange={(e) => setClinicId(e.target.value)}>
-            <option value="">All clinics</option>
-            {clinics.map((c) => (
-              <option key={c.id} value={c.id}>{c.name}</option>
+          Specialty
+          <select value={specialty} onChange={(e) => changeSpecialty(e.target.value)}>
+            <option value="">All specialties</option>
+            {specialties.map((sp) => (
+              <option key={sp.key} value={sp.key}>{sp.label}</option>
             ))}
           </select>
         </label>
@@ -121,9 +160,23 @@ export default function BookAppointmentPage() {
           </select>
         </label>
         <label>
+          Clinic
+          <select value={clinicId} onChange={(e) => setClinicId(e.target.value)}>
+            <option value="">All clinics</option>
+            {clinics.map((c) => (
+              <option key={c.id} value={c.id}>{c.name}</option>
+            ))}
+          </select>
+        </label>
+        <label>
           Date
           <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
         </label>
+        {hasFilters && (
+          <button className="btn" type="button" onClick={clearFilters} style={{ alignSelf: 'flex-end' }}>
+            Clear filters
+          </button>
+        )}
       </div>
 
       {confirming && (

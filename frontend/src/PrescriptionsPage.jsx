@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { api } from './api.js';
-import NewPrescriptionForm from './NewPrescriptionForm.jsx';
 
 // Reuse the existing state colours: ok = green, low = amber, out = red.
 const STATE = {
@@ -25,8 +24,6 @@ export default function PrescriptionsPage({ role }) {
   const [detail, setDetail] = useState(null);
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
-  const [createdMsg, setCreatedMsg] = useState('');
-  const [showForm, setShowForm] = useState(false);
   const [busy, setBusy] = useState(false);
 
   async function loadList() {
@@ -58,15 +55,6 @@ export default function PrescriptionsPage({ role }) {
       .catch((e) => setError(e.message));
   }, [selectedId]);
 
-  async function handleCreated(id) {
-    setShowForm(false);
-    setError('');
-    setNotice('');
-    setCreatedMsg(`Prescription #${id} created. It stays pending until a pharmacist dispenses it.`);
-    await loadList();
-    setSelectedId(id);
-  }
-
   async function dispense() {
     setBusy(true);
     setError('');
@@ -83,6 +71,8 @@ export default function PrescriptionsPage({ role }) {
       setBusy(false);
       await loadList();
       await loadDetail(selectedId);
+      // Tell the menu badge to recount.
+      window.dispatchEvent(new Event('rx-changed'));
     }
   }
 
@@ -98,34 +88,8 @@ export default function PrescriptionsPage({ role }) {
       </p>
 
       <div className="toolbar">
-        <button className="btn" onClick={loadList}>Refresh</button>{' '}
-        {!showForm && (
-          <button
-            className="btn"
-            onClick={() => {
-              setCreatedMsg('');
-              setError('');
-              setShowForm(true);
-            }}
-          >
-            New prescription
-          </button>
-        )}
+        <button className="btn" onClick={loadList}>Refresh</button>
       </div>
-
-      {createdMsg && (
-        <div
-          role="status"
-          className="panel"
-          style={{ padding: '0.75rem 1rem', marginBottom: '1rem', borderColor: 'var(--mp-teal)' }}
-        >
-          {createdMsg}
-        </div>
-      )}
-
-      {showForm && (
-        <NewPrescriptionForm onCreated={handleCreated} onCancel={() => setShowForm(false)} />
-      )}
 
       {error && <div role="alert" className="alert">{error}</div>}
 
@@ -146,7 +110,10 @@ export default function PrescriptionsPage({ role }) {
             {list.map((p) => (
               <tr key={p.id}>
                 <td className="num">{p.id}</td>
-                <td>{p.patient_name}</td>
+                <td>
+                  {p.patient_name}
+                  {p.is_new && <span className="rx-new">New</span>}
+                </td>
                 <td>{p.doctor_name}</td>
                 <td>{p.branch_name}</td>
                 <td className="num">{p.item_count}</td>
@@ -157,7 +124,6 @@ export default function PrescriptionsPage({ role }) {
                     onClick={() => {
                       setNotice('');
                       setError('');
-                      setCreatedMsg('');
                       setSelectedId(p.id);
                     }}
                   >
