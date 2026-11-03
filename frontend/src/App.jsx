@@ -14,6 +14,8 @@ import './AppPolish.css';
 import AccountsPage from './AccountsPage.jsx';
 import DoctorSchedulePage from './DoctorSchedulePage.jsx';
 import BookAppointmentPage from './BookAppointmentPage.jsx';
+import DoctorPatientsPage from './DoctorPatientsPage.jsx';
+import ConsultationPage from './ConsultationPage.jsx';
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -73,13 +75,15 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route element={<Layout user={user} onLogout={logout} />}>
-          <Route index element={<Navigate to={user.position === 'doctor' ? '/prescriptions' : '/stock'} replace />} />
+          <Route index element={<Navigate to={user.position === 'doctor' ? '/my-patients' : '/stock'} replace />} />
           <Route path="stock" element={<StockPage role={user.role} />} />
           <Route path="prescriptions" element={<PrescriptionsPage role={user.role} />} />
           <Route path="medicines" element={<MedicinesPage />} />
           <Route path="patients" element={<PatientsPage role={user.role} />} />
           <Route path="accounts" element={<AccountsPage />} />
           <Route path="schedule" element={<DoctorSchedulePage />} />
+          <Route path="my-patients" element={<DoctorPatientsPage />} />
+          <Route path="my-patients/:appointmentId" element={<ConsultationPage />} />
           <Route path="*" element={<p>This page does not exist.</p>} />
         </Route>
       </Routes>

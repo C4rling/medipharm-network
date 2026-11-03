@@ -26,11 +26,12 @@ export default function Layout({ user, onLogout }) {
             </>
           ) : (
             <>
+              {isDoctor && <NavLink to="/my-patients">My patients</NavLink>}
               {isDoctor && <NavLink to="/schedule">My schedule</NavLink>}
               {!isDoctor && <NavLink to="/stock">Stock</NavLink>}
               {!isDoctor && <NavLink to="/medicines">Medicines</NavLink>}
               <NavLink to="/prescriptions">Prescriptions</NavLink>
-              {!isPharmacist && <NavLink to="/patients">Patients</NavLink>}
+              {!isPharmacist && !isDoctor && <NavLink to="/patients">Patients</NavLink>}
               {isAdmin && <NavLink to="/accounts">Accounts</NavLink>}
             </>
           )}
