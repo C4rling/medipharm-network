@@ -15,7 +15,7 @@ import doctorRoutes from './routes/doctor.js';
 
 
 const app = express();
-app.use(cors({ origin: 'http://localhost:5173' })); // the Vite dev server
+app.use(cors({ origin: process.env.FRONTEND_ORIGIN ?? 'http://localhost:5173' }));
 app.use(express.json());
 
 
