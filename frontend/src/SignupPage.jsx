@@ -6,7 +6,11 @@ import './LoginPage.css';
 
 export default function SignupPage({ onLogin }) {
   const navigate = useNavigate();
-  const [name, setName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [dateOfBirth, setDateOfBirth] = useState('');
+  const [gender, setGender] = useState('');
+  const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -14,9 +18,19 @@ export default function SignupPage({ onLogin }) {
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
 
+  const today = new Date().toISOString().slice(0, 10);
+
   async function handleSubmit(e) {
     e.preventDefault();
     setError('');
+    if (firstName.trim().length < 2 || lastName.trim().length < 2) {
+      setError('Enter your first and last name.');
+      return;
+    }
+    if (!dateOfBirth) {
+      setError('Enter your date of birth.');
+      return;
+    }
     if (password.length < 8) {
       setError('Use a password with at least 8 characters.');
       return;
@@ -29,7 +43,15 @@ export default function SignupPage({ onLogin }) {
     try {
       const { token, user } = await api('/auth/register', {
         method: 'POST',
-        body: JSON.stringify({ name: name.trim(), email, password }),
+        body: JSON.stringify({
+          firstName: firstName.trim(),
+          lastName: lastName.trim(),
+          dateOfBirth,
+          gender: gender || undefined,
+          phone: phone.trim() || undefined,
+          email: email.trim(),
+          password,
+        }),
       });
       setToken(token);
       navigate('/', { replace: true });
@@ -74,15 +96,65 @@ export default function SignupPage({ onLogin }) {
           <p className="form__hint">It takes a minute. You’ll be signed in when it’s done.</p>
 
           <div className="field">
-            <label htmlFor="name">Full name</label>
+            <label htmlFor="firstName">First name</label>
             <input
-              id="name"
+              id="firstName"
               type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
               required
-              autoComplete="name"
+              maxLength={50}
+              autoComplete="given-name"
               autoFocus
+            />
+          </div>
+
+          <div className="field">
+            <label htmlFor="lastName">Last name</label>
+            <input
+              id="lastName"
+              type="text"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              required
+              maxLength={50}
+              autoComplete="family-name"
+            />
+          </div>
+
+          <div className="field">
+            <label htmlFor="dateOfBirth">Date of birth</label>
+            <input
+              id="dateOfBirth"
+              type="date"
+              value={dateOfBirth}
+              onChange={(e) => setDateOfBirth(e.target.value)}
+              required
+              min="1900-01-01"
+              max={today}
+              autoComplete="bday"
+            />
+          </div>
+
+          <div className="field">
+            <label htmlFor="gender">Gender (optional)</label>
+            <select id="gender" value={gender} onChange={(e) => setGender(e.target.value)}>
+              <option value="">Prefer not to say</option>
+              <option value="female">Female</option>
+              <option value="male">Male</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div className="field">
+            <label htmlFor="phone">Phone (optional)</label>
+            <input
+              id="phone"
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              maxLength={20}
+              autoComplete="tel"
             />
           </div>
 
@@ -94,6 +166,7 @@ export default function SignupPage({ onLogin }) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              maxLength={100}
               autoComplete="email"
             />
           </div>
