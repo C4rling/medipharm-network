@@ -84,7 +84,6 @@ router.post('/auth/register', async (req, res) => {
 
   if (gender && !GENDERS.includes(gender)) return bad('Gender must be male, female or other');
   if ((phone?.length ?? 0) > 20) return bad('Phone is too long (maximum 20 characters)');
-  if (!address) return bad('Address is required');
   if ((address?.length ?? 0) > 255) return bad('Address is too long (maximum 255 characters)');
   if ((emergencyContact?.length ?? 0) > 100) return bad('Emergency contact is too long (maximum 100 characters)');
 
