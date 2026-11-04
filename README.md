@@ -51,12 +51,13 @@ Start the API:
 npm start
 ```
 
+
 Check `http://localhost:3000/health`. It should return `{"ok":true}`.
 
 Try an endpoint:
 
 ```powershell
-$r = Invoke-RestMethod http://localhost:3000/auth/login -Method Post -ContentType 'application/json' -Body '{"email":"seed.pharmacist@medipharm.test","password":"Test1234!"}'
+$r = Invoke-RestMethod http://localhost:3000/auth/login -Method Post -ContentType 'application/json' -Body '{"email":"seed.pharmacist@medipharm.test","password":"YLYCLSLLV"}'
 $h = @{ Authorization = "Bearer $($r.token)" }
 Invoke-RestMethod http://localhost:3000/medicines -Headers $h
 ```

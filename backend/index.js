@@ -15,7 +15,10 @@ import doctorRoutes from './routes/doctor.js';
 
 
 const app = express();
-app.use(cors({ origin: 'http://localhost:5173' })); // the Vite dev server
+const allowedOrigins = (process.env.FRONTEND_ORIGIN
+  ?? 'http://localhost:5173,https://medipharm-network-1.onrender.com')
+  .split(',').map((s) => s.trim()).filter(Boolean);
+app.use(cors({ origin: allowedOrigins }));
 app.use(express.json());
 
 
